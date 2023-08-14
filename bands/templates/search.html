@@ -1,0 +1,97 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    {% if q %}
+        <div>
+            <br>
+            <h1>Search results for "{{q}}"</h1>
+            <br>
+        </div>
+        {% if qdata.bands %}
+        <h3 class="red">Bands:</h3>
+        <div class="row">
+            {% for band in qdata.bands %}
+                <div class="col">
+                    <div class="band-item">
+                        <center>
+                            <div class="logo">
+                                {% if band.logo %}
+                                <a href="{% url 'oneband' id=band.id %}"><img src="{{band.logo}}" alt={{band.name}}></a>
+                                {% endif %}
+                            </div>
+                            <h2><a href="{% url 'oneband' id=band.id %}">{{band}}</a></h2>
+                        </center>
+                    </div> 
+                </div>
+            {% endfor %}
+        </div>
+        {% endif %}
+        {% if qdata.musicians %}
+        <h3 class="red">Musicians:</h3>
+        <div class="row">
+            {% for musician in qdata.musicians %}
+                <div class="col">
+                    <center>
+                        {% if musician.photo %}
+                            <a href="{% url 'onemusician' id=musician.id %}"><img class="rounded" src="{{musician.photo}}" alt={{musician.name}} width=200></a>
+                        {% endif %}
+                        <div class="alname" >
+                            <h3><a href="{% url 'onemusician' id=musician.id %}">{{musician}}</a></h3>
+                        </div>
+                    </center>
+                </div>
+            {% endfor %}
+        </div>
+        {% endif %}
+        {% if qdata.albums %}
+        <h3 class="red">Albums:</h3>
+        <div class="row">
+            {% for album in qdata.albums %}
+            <div class="col">
+                <center>
+                
+                {% if album.cover %}
+                    <a href="{% url 'onealbum' id=album.id %}"><img class="rounded" src="{{album.cover}}"
+                            alt={{album.name}} width=200></a>
+                {% endif %}
+                <div class="alname" >
+                    <h3><a href="{% url 'onealbum' id=album.id %}">{{album}}</a></h3>
+                </div>  
+                <br>
+                </center>
+            </div>
+            {% endfor %}
+        </div>
+        {% endif %}
+        {% if qdata.songs %}
+        <h3 class="red">Songs:</h3>
+        <div class="row">
+            {% for song in qdata.songs %}
+                <div class="col">
+                    <center>
+                        {% if song.album.cover %}
+                        <a href="{% url 'onesong' id=song.id %}"><img class="rounded" src="{{song.album.cover}}" alt={{song.album.name}} width=200></a>
+                        {% endif %}
+                        <h3><a href="{% url 'onesong' id=song.id %}">{{song.name}}</a></h3>
+                        <br>
+                    </center>
+                </div>
+            {% endfor %}
+        </div>
+        {% endif %}
+    {% else %}
+        <br>
+        <h1>Request must contain at least 3 characters</h1>
+        <br>
+        <br>
+        <br>
+        <br>
+        <br>
+        <br>
+        <br>
+        <br>
+        <br>
+        <br>
+        <br>
+    {% endif %}
+{% endblock content %}

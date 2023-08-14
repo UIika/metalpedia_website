@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <div>
+        <h1><a href="{% url 'onecountry' id=country.id %}">All Metal Bands From&nbsp{{country.name}}</a></h1>
+        <br>
+    </div>
+    <div class="row">
+        {% for band in country.bands.all %}
+        <div class="col">
+            <div class="band-item">
+                <center>
+                    <div class="logo">
+                        {% if band.logo %}
+                        <a href="{% url 'oneband' id=band.id %}"><img src="{{band.logo}}" alt={{band.name}}></a>
+                        {% endif %}
+                    </div>
+                    <h2><a href="{% url 'oneband' id=band.id %}">{{band}}</a></h2>
+                    <br>
+                </center>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+{% endblock content %}

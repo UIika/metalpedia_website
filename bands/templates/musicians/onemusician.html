@@ -1,0 +1,98 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+
+<div class='container'>
+    <div class="row row-cols-auto">
+        <div class="col">
+            <h1><a href="{% url 'onemusician' id=musician.id %}">{{musician}}</a></h1>
+            {% if musician.photo %}
+            <div>
+                <img class="rounded" src="{{musician.photo}}" alt={{musician.name}} width=320>
+            </div>
+            {% endif %}
+            <br>
+        </div>
+        <div class="col">
+            <br>
+            <br>
+            <br>
+            {% if musician.bands.all %}
+            <div class="span">
+                <h3 class="red">Active Band(s):&nbsp&nbsp&nbsp</h3>
+                <div>
+                    {% for band in musician.bands.all %}
+                    {% if band.breakup_year %}
+                    {% else %}
+                    <h3><a href="{% url 'oneband' id=band.id %}">{{band}}&nbsp&nbsp</a></h3>
+                    {% endif %}
+                    {% endfor %}
+                </div>
+            </div>
+            {% endif %}
+            <br>
+            {% if musician.exbands.all or musician.bands.all %}
+            <div class="span">
+                <h3 class="red">Past Band(s):&nbsp&nbsp&nbsp</h3>
+                <div>
+                    {% for band in musician.bands.all %}
+                    {% if band.breakup_year %}
+                    <h3><a href="{% url 'oneband' id=band.id %}">{{band}}&nbsp&nbsp</a></h3>
+                    {% endif %}
+                    {% endfor %}
+                    {% for band in musician.exbands.all %}
+                    <h3><a href="{% url 'oneband' id=band.id %}">{{band}}&nbsp&nbsp</a></h3>
+                    {% endfor %}
+                </div>
+            </div>
+            {% endif %}
+            <br>
+            <div class="span">
+                <h3 class="red">Profession(s):&nbsp&nbsp&nbsp</h3>
+                <div>
+                    <h3><a href="{% url 'home' %}">{{musician.profession}}&nbsp&nbsp</a></h3>
+                </div>
+            </div>
+            <br>
+            <div class="span">
+                <h3 class="red">Age:&nbsp&nbsp&nbsp</h3>
+                <div>
+                    <h3>{{musician.birth_date}}</h3>
+                </div>
+            </div>
+            {% if musician.death_date %}
+            <div class="span">
+                <h3 class="red">R.I.P.:&nbsp&nbsp&nbsp</h3>
+                <div>
+                    <h3>{{musician.death_date}}</h3>
+                </div>
+            </div>
+            {% endif %}
+
+            {% if request.user.is_authenticated %}
+            {% if like %}
+            <form action="{% url 'delete_like_musician' id=musician.id %}" method="POST">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-secondary btn-block m-3" name="like">
+                    <div class="span">
+                        <h2 class="mt-2">Unlike</h2>
+                    </div>
+                </button>
+            </form>
+            {% else %}
+            <form action="{% url 'like_musician' id=musician.id %}" method="POST">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-danger btn-block m-3" name="like">
+                    <div class="span">
+                        <h2 class="mt-2">Like!</h2>
+                        <input class="m-1" type="image" src="{% static 'images/favicon.ico' %}" alt="like" width="50">
+                    </div>
+                </button>
+            </form>
+            {% endif %}
+            {% endif %}
+
+        </div>
+    </div>
+    <div>
+        {% endblock content %}

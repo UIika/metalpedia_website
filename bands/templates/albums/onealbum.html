@@ -1,0 +1,68 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+<div class='container'>
+    <h1><a href="{% url 'onealbum' id=album.id %}">{{album}}</a></h1>
+    <div class="row row-cols-auto">
+        <div class="col">
+            {% if album.cover %}
+            <div>
+                <img class="rounded" src="{{album.cover}}" alt={{album.name}} width=320>
+            </div>
+            {% endif %}
+            <br>
+            <div class="span">
+                <h3 class="red">Band:&nbsp&nbsp&nbsp</h3>
+                <h3><a href="{% url 'oneband' id=album.band.id%}">{{album.band}}</a></h3>
+            </div>
+            <br>
+            <div class="span">
+                <h3 class="red">Release year:&nbsp&nbsp&nbsp</h3>
+                <h3><a href="{% url 'years' n=album.release_year.number%}">{{album.release_year.number}}</a></h3>
+            </div>
+            
+            {% if request.user.is_authenticated %}
+            {% if like %}
+            <form action="{% url 'delete_like_album' id=album.id %}" method="POST">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-secondary btn-block m-3" name="like">
+                    <div class="span">
+                        <h2 class="mt-2">Unlike</h2>
+                        
+                    </div>
+                </button>
+            </form>
+            {% else %}
+            <form action="{% url 'like_album' id=album.id %}" method="POST">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-danger btn-block m-3" name="like">
+                    <div class="span">
+                        <h2 class="mt-2">Like!</h2>
+                        <input class="m-1" type="image" src="{% static 'images/favicon.ico' %}" alt="like"
+                            width="50">
+                    </div>
+                </button>
+            </form>
+            {% endif %}
+            {% endif %}
+
+        </div>
+        <div class="col">
+            <br>
+            <h3 class="red">Songs: </h3>
+            <br>
+            {% for song in album.songs.all %}
+                <div class="songname">
+                    <h3>
+                        <a href="{% url 'onesong' id=song.id %}">
+                        {{song.name}}
+                        </a>   -   {{song.duration|time:'i:s' }}
+                    </h3>
+                </div>
+            <br>
+            {% endfor %}
+        </div>
+    </div>
+    <div>
+        {% include 'comments.html' %}
+        {% endblock content %}

@@ -1,0 +1,61 @@
+<br>
+<section style="bg-dark">
+    <h3 class="mb-0">Comments</h3>
+    {% if request.user.is_authenticated %}
+    <br>
+    <form action="" method="POST">
+        {% csrf_token %}
+        <div class="form-outline w-100">
+            <textarea name="commentarea" class="form-control"></textarea>
+        </div>
+        <div class="float-end mt-2">
+            <button type="submit" class="btn btn-danger btn-block mb-4">Post</button>
+        </div>
+    </form>
+    <br>
+
+    {% endif %}
+    {% if comments.all %}
+    {% for comment in comments.all %}
+    <div class="card-body p-4">
+        <div class="d-flex flex-start">
+            <img class="rounded-circle shadow-1-strong me-3"
+            src="{{comment.user.profile.avatar.url}}" alt="{{comment.user.username}}" width="60" height="60" />
+            <div>
+                <div class="span">
+                    <h6 class="fw-bold mb-1">{{comment.user.username}}</h6>
+                    {% if comment.user.is_superuser %}&nbsp
+                    <span class="badge bg-danger">Admin</span>
+                    {% endif %}
+                </div>
+                
+                
+                <div class="d-flex align-items-center mb-3">
+                    <p class="mb-0">
+                        {{comment.updated}}
+                    </p>
+                    <a href="#!" class="link-muted"><i class="fas fa-pencil-alt ms-2"></i></a>
+                    <a href="#!" class="link-muted"><i class="fas fa-redo-alt ms-2"></i></a>
+                    <a href="#!" class="link-muted"><i class="fas fa-heart ms-2"></i></a>
+                </div>
+                <h5 class="mb-0">
+                    {{comment.text}}
+                </h5>
+                {% if comment.user == request.user %}
+                <br>
+                <form action="{% url 'delete_comment' id=comment.id %}" method="POST">
+                    {% csrf_token %}
+                        <input type="hidden" name="next" value="{{ request.path }}">
+                        <button type="submit" class="btn btn-outline-danger btn-block btn-sm">Delete comment</button>
+                </form>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    <hr class="my-0" />
+    {% endfor %}
+    {% else %}
+    <br>
+    <h3>No comments here yet</h3>
+    {% endif %}
+</section>

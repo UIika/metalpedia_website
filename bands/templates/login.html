@@ -1,0 +1,38 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<div class="container">
+
+    {% if messages %}
+    {% for message in messages %}
+    <h3>{{message}}</h3>
+    <br>
+    {% endfor %}
+    {% endif %}
+
+    <form method="POST" action="">
+        {% csrf_token %}
+        <h1>Login</h1>
+        <br>
+        <div>
+            <div class="login">
+                <input name='username' type="text" id="ex2" class="form-control">
+                <label class="form-label" for="form2Example1">Username</label>
+            </div>
+    
+            <div class="login">
+                <input name='password' type="password" id="ex2" class="form-control" />
+                <label class="form-label" for="form2Example2">Password</label>
+            </div>
+
+
+            <button type="submit" class="btn btn-primary btn-block mb-4" value="Login">Sign in</button>
+
+            <h5>Not a member? <a href="{% url 'register' %}">Register</a></h5>
+        </div>
+
+    </form>
+</div>
+
+{% endblock content %}

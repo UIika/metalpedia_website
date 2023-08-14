@@ -1,0 +1,156 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+
+{% load humanize %}
+<div class='container'>
+    <div class="row row-cols-auto">
+        <div class="col">
+            <h1><a href="{% url 'oneband' id=band.id%}">{{band}}</a></h1>
+            {% if band.logo %}
+            <div>
+                <img class="onebl" src="{{band.logo}}" alt={{band.name}} width=320>
+            </div>
+            {% endif %}
+            {% if band.bandphoto %}
+            <div>
+                <img class="onebp" src="{{band.bandphoto}}" alt={{band.name}} width=320>
+            </div>
+            {% endif %}
+        </div>
+        <div class="col">
+            <br>
+            <br>
+            <br>
+            <h3 class="red">Genre(s): </h3>
+            <h3>&nbsp&nbsp&nbsp{{band.genres}}</h3>
+            <h3 class="red">Country: </h3>
+            <div class="span">
+                <a href="{% url 'onecountry' id=band.country.id %}">
+                    <h3>&nbsp&nbsp&nbsp{{band.country.name}}&nbsp</h3>
+                </a>
+                {% if band.country.flag %}
+                <img src="{{band.country.flag}}" alt={{band.name}} height="35">
+                {% endif %}
+            </div>
+            <h3 class="red">Formed in: </h3>
+            <h3><a href="{% url 'years' n=band.found_year %}">&nbsp&nbsp&nbsp{{band.found_year}}</a></h3>
+
+            {% if band.breakup_year %}
+            <h3 class="red">Broke up in: </h3>
+            <h3><a href="{% url 'years' n=band.breakup_year %}">&nbsp&nbsp&nbsp{{band.breakup_year}}</a></h3>
+            {% endif %}
+
+            {% if request.user.is_authenticated %}
+            {% if like %}
+            <form action="{% url 'delete_like_band' id=band.id %}" method="POST">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-secondary btn-block m-3" name="like">
+                    <div class="span">
+                        <h2 class="mt-2">Unlike</h2>
+                    </div>
+                </button>
+            </form>
+            {% else %}
+            <form action="{% url 'like_band' id=band.id %}" method="POST">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-danger btn-block m-3" name="like">
+                    <div class="span">
+                        <h2 class="mt-2">Like!</h2>
+                        <input class="m-1" type="image" src="{% static 'images/favicon.ico' %}" alt="like"
+                            width="50">
+                    </div>
+                </button>
+            </form>
+            {% endif %}
+            {% endif %}
+
+        </div>
+    </div>
+    <br>
+    {% if band.members.all %}
+    {% if band.breakup_year %}
+    <h3 class="red">Last Known Members: </h3>
+    {% else %}
+    <h3 class="red">Members: </h3>
+    {% endif %}
+
+    <br>
+    <div class="container">
+        <div class="row">
+            {% for member in band.members.all %}
+            <div class="col">
+                <center>
+                    {% if member.photo %}
+                    <a href="{% url 'onemusician' id=member.id %}">
+                        <img class="rounded" src="{{member.photo}}" alt={{member.name}} width=200>
+                    </a>
+                    {% else %}
+                    <a href="{% url 'onemusician' id=member.id %}">
+                        <img class="rounded" src="{% static 'images/avatar.jpg' %}" alt={{member.name}} width=200>
+                    </a>
+                    {% endif %}
+                    <h3><a href="{% url 'onemusician' id=member.id %}">{{member}}</a></h3>
+                    <h5>{{member.profession}}</h5>
+                </center>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+    {% endif %}
+    <br>
+    {% if band.exmembers.all %}
+    <h3 class="red">Past Members: </h3>
+    <br>
+    <div class="container">
+        <div class="row">
+            {% for member in band.exmembers.all %}
+            <div class="col">
+                <center>
+                    {% if member.photo %}
+                    <a href="{% url 'onemusician' id=member.id %}">
+                        <img class="rounded" src="{{member.photo}}" alt={{member.name}} width=200>
+                    </a>
+                    {% else %}
+                    <a href="{% url 'onemusician' id=member.id %}">
+                        <img class="rounded" src="{% static 'images/avatar.jpg' %}" alt={{member.name}} width=200>
+                    </a>
+                    {% endif %}
+                    <h3><a href="{% url 'onemusician' id=member.id %}">{{member.name}}</a></h3>
+                    <h5>{{member.profession}}</h5>
+                </center>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+    {% endif %}
+    <br>
+    {% if band.albums.all %}
+    <h3 class="red">Albums: </h3>
+    <br>
+    <div class="container">
+
+        <div class="row">
+            {% for album in band.albums.all %}
+            <div class="col">
+                <center>
+                    <a href="{% url 'years' n=album.release_year.number%}">
+                        <h3>{{album.release_year.number}}</h3>
+                    </a>
+                    {% if album.cover %}
+                    <div>
+                        <a href="{% url 'onealbum' id=album.id %}">
+                            <img class="rounded" src="{{album.cover}}" alt={{album.name}} width=200>
+                        </a>
+                    </div>
+                    {% endif %}
+                    <h3><a href="{% url 'onealbum' id=album.id %}">{{album.name}}</a></h5>
+
+                </center>
+            </div>
+            {% endfor %}
+        </div>
+        {% endif %}
+    </div>
+    {% include 'comments.html' %}
+    {% endblock content %}

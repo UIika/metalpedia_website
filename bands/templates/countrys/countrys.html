@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <div>
+        <br>
+        <h1><a href="{% url 'countries' %}">All Countries</a></h1>
+        <br>
+    </div>
+    <div class="row">
+        {% for country in page %}
+            <div class="col">
+                <center>
+                {% if country.flag %}
+                    <a href="{% url 'onecountry' id=country.id %}"><img class="flag" src="{{country.flag}}"
+                            alt={{country.name}}>
+                    </a>
+                {% endif %}
+                <div class="alname">
+                    <h3><a href="{% url 'onecountry' id=country.id %}">{{country.name}}</a></h3>
+                </div>  
+                <br>
+                </center>
+            </div>
+        {% endfor %}
+    </div>
+{% include 'paginator.html' %}
+{% endblock content %}

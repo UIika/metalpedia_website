@@ -1,0 +1,39 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<div>
+    <br>
+    <h1><a href="{% url 'musicians' %}">All Metal Musicians</a></h1>
+    <br>
+</div>
+<div class="row">
+    {% for musician in page %}
+    <div class="col">
+        <center>
+            <div>
+                {{musician.num_likes}}
+                <img class="mb-1" src="{% static 'images/favicon.ico' %}" width="20">
+            </div>
+            <div class="musphoto">
+                {% if musician.photo %}
+                <a href="{% url 'onemusician' id=musician.id %}">
+                    <span>
+                        <img class="rounded" src="{{musician.photo}}" alt={{musician.name}} width=200>
+                    </span>
+                </a>
+                {% else %}
+                <a href="{% url 'onemusician' id=musician.id %}">
+                    <img class="rounded" src="{% static 'images/avatar.jpg' %}" alt={{musician.name}} width=200>
+                </a>
+                {% endif %}
+                <div class="alname">
+                    <h3><a href="{% url 'onemusician' id=musician.id %}">{{musician}}</a></h3>
+                </div>
+            </div>
+        </center>
+    </div>
+    {% endfor %}
+</div>
+{% include 'paginator.html' %}
+{% endblock content %}

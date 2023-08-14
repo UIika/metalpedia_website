@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+<div>
+    <br>
+    <h1><a href="{% url 'bands' %}">All Metal Bands</a></h1>
+    <br>
+</div>
+{% comment %} <input type="text" placeholder="What are you looking for?"> {% endcomment %}
+<div class="row">
+    {% for band in page %}
+    <div class="col">
+        <div class="band-item">
+            <center>
+                <div>
+                    {{band.num_likes}}
+                    <img class="mb-1" src="{% static 'images/favicon.ico' %}" width="20">
+                </div>
+                <div class="logo">
+                    {% if band.logo %}
+                    <a href="{% url 'oneband' id=band.id %}">
+                        <img src="{{band.logo}}" alt={{band.name}}>
+                    </a>
+                    {% endif %}
+                </div>
+                <h2><a href="{% url 'oneband' id=band.id %}">{{band}}</a></h2>
+            </center>
+        </div>
+        <br>
+        <br>
+    </div>
+    {% endfor %}
+</div>
+{% include 'paginator.html' %}
+{% endblock content %}

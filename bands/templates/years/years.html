@@ -1,0 +1,39 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <div>
+        <br>
+        <h1><a href="{% url 'years' n=default_year %}">All Metal Albums Through Years</a></h1>
+        <br>
+    </div>
+    <form method="POST" action="">
+        {% csrf_token %}
+        <input oninput="rangeVal(this.value)" name="range" type="range" class="form-range"
+        min="{{minyear}}" max="{{maxyear}}" value="{{rangeval}}" step="1">
+        <div class="span">
+            <h3 id="currentValue">{{rangeval}}</h3>
+            <h3>&nbsp</h3>
+            <button class="btn btn-danger" type="submit">
+                <strong>GO</strong>
+            </button>
+        </div>
+        <br>
+    </form>
+    <div class="row">
+        {% for album in year.albums.all %}
+            <div class="col">
+                <center>
+                {% if album.cover %}
+                    <a href="{% url 'onealbum' id=album.id%}"><img class="rounded" src="{{album.cover}}"
+                            alt={{album.name}} width=200>
+                    </a>
+                {% endif %}
+                <div class="alname">
+                    <h3><a href="{% url 'onealbum' id=album.id %}">{{album}}</a></h3>
+                </div>  
+                <br>
+                </center>
+            </div>
+        {% endfor %}
+    </div>
+{% endblock content %}

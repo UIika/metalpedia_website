@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<div class="container">
+
+    {% if messages %}
+    {% for message in messages %}
+    <h3>{{message}}</h3>
+    <br>
+    {% endfor %}
+    {% endif %}
+
+    <form method="POST" action="">
+        {% csrf_token %}
+        <h1>Registration</h1>
+        <br>
+        <div>
+            {{form.as_p}}
+            <button type="submit" class="btn btn-primary btn-block mb-4" value="Register">Sign up</button>
+
+            <h5>Already signed up? <a href="{% url 'login' %}">Login</a></h5>
+        </div>
+
+    </form>
+</div>
+
+{% endblock content %}

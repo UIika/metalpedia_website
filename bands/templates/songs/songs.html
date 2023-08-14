@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div>
+    <br>
+    <h1><a href="{% url 'songs' %}">All Metal Songs</a></h1>
+    <br>
+</div>
+<div class="row">
+    {% for song in page %}
+    <div class="col">
+        <center>
+            {% if song.album.cover %}
+            <a href="{% url 'onesong' id=song.id %}">
+                <img class="rounded" src="{{song.album.cover}}"
+                    alt={{song.album.name}} width=200>
+            </a>
+            {% endif %}
+            <h3><a href="{% url 'onesong' id=song.id %}">{{song.name}}</a></h3>
+            <br>
+        </center>
+    </div>
+    {% endfor %}
+</div>
+{% include 'paginator.html' %}
+{% endblock content %}
+

@@ -1,0 +1,126 @@
+{% extends 'base.html' %}
+{% load static %}
+<br>
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-7 col-lg-4 mb-5 mb-lg-0 wow fadeIn">
+        <div class="bg-dark">
+            <img src="{{profile.avatar.url}}" alt="...">
+            <div class="m-4">
+                <div class="span">
+                    <h1>{{profile.user.username}}</h1>
+                    {% if profile.user.is_superuser %}&nbsp
+                        <span class="badge bg-danger"><h4 class="mt-2">Admin</h4></span>
+                    {% endif %}
+                </div>
+                {% if profile.user.is_superuser %}
+                <br>
+                <a href="{% url 'addbands' %}"><h3>Add new bands</h3></a>
+                {% endif %}
+                <br>
+                <div>
+                    <a style="font-size: 20px; font-weight: bold;" href="{% url 'logout' %}"><h3>Log out</h3></a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-8">
+        <div class="ps-lg-1-6 ps-xl-5">
+            <div class="mb-3 wow fadeIn">
+                <div class="text-start mb-1-6 wow fadeIn">
+                    <h2 class="mb-0 text-danger">Favourite bands</h2>
+                    <br>
+                    <div class="row">
+                        {% for band in profile.user.bands.all %}
+                        <div class="col">
+                            <div class="band-item">
+                                <center>
+                                    <div class="logo">
+                                        {% if band.logo %}
+                                        <a href="{% url 'oneband' id=band.id %}">
+                                            <img src="{{band.logo}}" alt={{band.name}}>
+                                        </a>
+                                        {% endif %}
+                                    </div>
+                                    <h2><a href="{% url 'oneband' id=band.id %}">{{band}}</a></h2>
+                                </center>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+                <div class="mb-3 wow fadeIn">
+                    <div class="text-start mb-1-6 wow fadeIn">
+                        <h2 class="mb-0 text-danger">Favourite albums</h2>
+                        <br>
+                        <div class="row">
+                            {% for album in profile.user.albums.all %}
+                            <div class="col">
+                                <center>
+                                    {% if album.cover %}
+                                    <a href="{% url 'onealbum' id=album.id %}"><img class="rounded"
+                                            src="{{album.cover}}" alt={{album.name}} width=100>
+                                    </a>
+                                    {% endif %}
+                                    <div class="alname">
+                                        <h5><a href="{% url 'onealbum' id=album.id %}">{{album}}</a></h5>
+                                    </div>
+                                </center>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+                <div class="mb-3 wow fadeIn">
+                    <div class="text-start mb-1-6 wow fadeIn">
+                        <h2 class="mb-0 text-danger">Favourite musicians</h2>
+                        <br>
+                        <div class="row">
+                            {% for musician in profile.user.musicians.all %}
+                            <div class="col">
+                                <center>
+                                    <div class="musphoto">
+                                        {% if musician.photo %}
+                                        <a href="{% url 'onemusician' id=musician.id %}">
+                                            <span>
+                                                <img class="rounded" src="{{musician.photo}}" alt={{musician.name}}>
+                                            </span>
+                                        </a>
+                                        {% else %}
+                                        <a href="{% url 'onemusician' id=musician.id %}">
+                                            <img class="rounded" src="{% static 'images/avatar.jpg' %}"
+                                                alt={{musician.name}} width=100>
+                                        </a>
+                                        {% endif %}
+                                        <div class="alname">
+                                            <h5><a href="{% url 'onemusician' id=musician.id %}">{{musician}}</a></h5>
+                                        </div>
+                                    </div>
+                                </center>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+                <div class="mb-3 wow fadeIn">
+                    <div class="text-start mb-1-6 wow fadeIn">
+                        <h2 class="mb-0 text-danger">Favourite songs</h2>
+                        <br>
+                        <ul>
+                            {% for song in profile.user.songs.all %}
+                            <li>
+                                <h5>
+                                    <a href="{% url 'onesong' id=song.id %}">
+                                        {{song.album.band.name}} - {{song.name}}
+                                    </a>
+                                </h5>
+                            </li>
+                            {% endfor %}  
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {% endblock content %}

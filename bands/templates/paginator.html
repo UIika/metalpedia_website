@@ -1,0 +1,26 @@
+{% if page.has_other_pages %}
+<center>
+    <div class="btn-group" role="group" aria-label="Item pagination">
+        {% if page.has_previous %}
+            <a href="?page={{ page.previous_page_number }}" class="btn btn-outline-danger">&laquo;</a>
+        {% endif %}
+
+        {% for page_number in page.paginator.page_range %}
+            {% if page.number == page_number %}
+                <button class="btn btn-outline-danger active">
+                    <span>{{ page_number }}</span>
+                </button>
+            {% comment %} {% else %}
+                <a href="?page={{ page_number }}" class="btn btn-outline-danger">
+                    {{ page_number }}
+                </a> {% endcomment %}
+            {% endif %}
+        {% endfor %}
+
+        {% if page.has_next %}
+            <a href="?page={{ page.next_page_number }}" class="btn btn-outline-danger">&raquo;</a>
+        {% endif %}
+    </div>
+</center>
+    {% endif %}
+    <br>
