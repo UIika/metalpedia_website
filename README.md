@@ -1,3 +1,3 @@
-# metalpedia_website
+# Metalpedia
 
 https://ulika.pythonanywhere.com
