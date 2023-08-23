@@ -1,15 +1,14 @@
 import datetime
 import random
-from django.http import Http404, HttpResponseNotFound, HttpResponseRedirect
+import sys
+from django.http import HttpResponseNotFound, HttpResponseRedirect
 from django.shortcuts import redirect, render, get_object_or_404
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.forms import UserCreationForm
 from django.core.exceptions import ObjectDoesNotExist
-from django.db.models import Count, Q
-from django.db.models import Min, Max
-from django.core.files import File
-from django.core.files.temp import NamedTemporaryFile
+from django.db.models import Count
+from django.db.models import Min
 # from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.core.paginator import Paginator
@@ -39,7 +38,7 @@ flags = {}
 for country in countries_data:
     flags[country['name']] = country['file_url']
         
-objects_per_page = 60  # 60, because 60 is divisible by 5, 4, 3, 2, 1 (nice to )
+objects_per_page = 80
 
 ytapikey = config('YTAPIKEY')
 
@@ -64,8 +63,11 @@ def createyears(min:int, max:int):
         
 def createband(url, browser):
     band = bandparse.getbandsdata(url, browser)
-    country = Country.objects.get_or_create(name=band['country'], flag=flags[band['country']])
-    newband = Band.objects.get_or_create(
+    try:
+        country = Country.objects.update_or_create(name=band['country'], flag=flags[band['country']])
+    except:
+        country = Country.objects.update_or_create(name=band['country'])
+    newband = Band.objects.update_or_create(
         
         name=band['name'],
         country=country[0],
@@ -78,8 +80,8 @@ def createband(url, browser):
         )
     newband[0].save()
     for album in band['albumslist']:
-        year = Year.objects.get_or_create(number=album['album_year'])
-        newalbum = Album.objects.get_or_create(
+        year = Year.objects.update_or_create(number=album['album_year'])
+        newalbum = Album.objects.update_or_create(
             
             name=album['album_name'],
             band=newband[0],
@@ -95,7 +97,7 @@ def createband(url, browser):
                 d = datetime.time(int(h) if h else 0, int(m) if m else 0, int(s))
             except:
                 d = datetime.time(0,random.choice(range(3,6)),random.choice(range(60)))
-            newsong = Song.objects.get_or_create(
+            newsong = Song.objects.update_or_create(
                 
             name=song['song_name'],
             album=newalbum[0],
@@ -106,10 +108,18 @@ def createband(url, browser):
             if newsong[0].name != '-' or '...':
                 newsong[0].save()
     for member in band['memberslist']:
+        try:
+            country = Country.objects.update_or_create(name=member['member_country'], flag=flags[member['member_country']])
+        except:
+            try:
+                country = Country.objects.update_or_create(name=member['member_country'])
+            except:
+                country = None
         newmember = Musician.objects.update_or_create(
             
         name=member['member_name'],
         profession=member['member_prof'],
+        country=country[0] if country else None,
         birth_date=member['member_age'],
         death_date=member['member_rip'],
         photo=member['member_photo'],
@@ -117,14 +127,22 @@ def createband(url, browser):
         newmember[0].save()
         newband[0].members.add(newmember[0])
     for exmember in band['exmemberslist']:
+        try:
+            country = Country.objects.update_or_create(name=exmember['exmember_country'], flag=flags[exmember['exmember_country']])
+        except:
+            try:
+                country = Country.objects.update_or_create(name=exmember['exmember_country'])
+            except:
+                country = None
         newexmember = Musician.objects.update_or_create(
-            
         name=exmember['exmember_name'],
         profession=exmember['exmember_prof'],
+        country=country[0] if country else None,
         birth_date=exmember['exmember_age'],
         death_date=exmember['exmember_rip'],
         photo=exmember['exmember_photo'],
         )
+        
         newexmember[0].save()
         newband[0].exmembers.add(newexmember[0])
     newband[0].save()
@@ -142,37 +160,21 @@ def delete_comment(request, id):
 
     return HttpResponseRedirect(next)
 
-def like_post(request, instance, id):
+def like(request, instance, id):
+    instance = getattr(sys.modules[__name__], instance)
     obj = instance.objects.get(id=id)
     obj.likes.add(request.user)
     obj.save()
     
     return redirect(f'one{instance.__name__.lower()}', id=id)
 
-def like_band(request, id):
-    return like_post(request, Band, id)
-def like_album(request, id):
-    return like_post(request, Album, id)
-def like_musician(request, id):
-    return like_post(request, Musician, id)
-def like_song(request, id):
-    return like_post(request, Song, id)
-
-def delete_like_model(request, instance, id):
+def delete_like(request, instance, id):
+    instance = getattr(sys.modules[__name__], instance)
     obj = instance.objects.get(id=id)
     obj.likes.remove(request.user)
     obj.save()
-
+    
     return redirect(f'one{instance.__name__.lower()}', id=id)
-
-def delete_like_band(request, id):
-    return delete_like_model(request, Band, id)
-def delete_like_album(request, id):
-    return delete_like_model(request, Album, id)
-def delete_like_musician(request, id):
-    return delete_like_model(request, Musician, id)
-def delete_like_song(request, id):
-    return delete_like_model(request, Song, id)
 
 def home(request):
     return render(request, 'home.html',
@@ -191,13 +193,9 @@ def onemodel(request, instance, id, *args): # One common function for representi
         context = {
             instance.__name__.lower(): obj,
             'comments': obj.comments if hasattr(obj, 'comments') else None,
-            'like': obj.likes.filter(id=request.user.id) if hasattr(obj, 'likes') else None
+            'like': obj.likes.filter(id=request.user.id) if hasattr(obj, 'likes') else None,
+            'num_likes': obj.likes.count() if instance != Country else None
             }
-        try:
-            
-            context['like'] = obj.likes.get(user=request.user)
-        except:
-            pass
         for arg in args:
             context[f'{arg=}'] = arg
         return render(request, f'{instance.__name__.lower()}s/one{instance.__name__.lower()}.html', context)
@@ -249,8 +247,8 @@ def onecountry(request, id):
 
 def years(request, n=default_year):
     minyear = Year.objects.values('number').aggregate(Min('number'))['number__min']
-    maxyear = Year.objects.values('number').aggregate(Max('number'))['number__max']
-    createyears(minyear, maxyear+1)
+    maxyear = datetime.date.today().year
+    createyears(minyear, maxyear)
     try:
         context = {
                 'minyear':minyear,
@@ -271,10 +269,10 @@ def search(request):
     if request.method == 'POST':
         q = request.POST['q'] if len(request.POST['q']) > 2 else ''
         qdata = {
-            'bands': Band.objects.all().filter(name__contains=q),
-            'albums': Album.objects.all().filter(name__contains=q),
-            'musicians': Musician.objects.all().filter(name__contains=q),
-            'songs': Song.objects.all().filter(name__contains=q)
+            'bands': Band.objects.all().filter(name__icontains=q),
+            'albums': Album.objects.all().filter(name__icontains=q),
+            'musicians': Musician.objects.all().filter(name__icontains=q),
+            'songs': Song.objects.all().filter(name__icontains=q)
         }
         return render(request, 'search.html', {
             'q': q,
@@ -299,7 +297,7 @@ def loginPage(request):
 
         if user:
             login(request, user)
-            return redirect('home')
+            return redirect('oneprofile', id=user.profile.id)
         else:
             messages.error(request, 'Username or password does not exist')
 
@@ -324,7 +322,7 @@ def registerPage(request):
             user.username = user.username.lower()
             user.save()
             login(request, user)
-            return redirect('home')
+            return redirect('oneprofile', id=request.user.profile.id)
         else:
             messages.error(request, 'An error occured during registration')
 
@@ -333,26 +331,38 @@ def registerPage(request):
     })
 
 
-def userProfile(request, id):
-    profile = Profile.objects.get(user=User.objects.get(id=id))
-    return render(request, 'profile.html', {
-        'profile': profile
-    })
+def oneprofile(request, id):
+    return onemodel(request, Profile, id)
+    
+def profiles(request):
+    return manymodels(request, Profile)
+    
+def change_avatar(request, id):
+    try:
+        profile = Profile.objects.get(id=id)
+        avatar_form = AvatarChangeForm(request.POST or None, request.FILES or None, instance=profile)
+        if request.method == 'POST':
+            if avatar_form.is_valid():
+                avatar_form.save()
+                return redirect('oneprofile', id=id)
+        return render(request, 'change_avatar.html', {
+            'profile': profile,
+            'avatar_form': avatar_form
+        })
+    except ObjectDoesNotExist:
+        return redirect('profile', id=id)
+
     
 def addbands(request):
     bands = Band.objects.all().order_by('id')
     if request.method == 'POST':
         bandlinks = request.POST.get('bandlinks').split('\n')
-        try:
-            firefox_options = Options()
-            browser = webdriver.Firefox(options=firefox_options)
-            browser.set_window_size(600,400)
-            for link in bandlinks:  
-                createband(link, browser)
-            browser.close()
-        except:
-            messages.error(request, 'An error occured during band(s) creation')
-            browser.close()
+        firefox_options = Options()
+        browser = webdriver.Firefox(options=firefox_options)
+        browser.set_window_size(1280,720)
+        for link in bandlinks:
+            createband(link, browser)
+        browser.close()
     return render(request, 'addbands.html', {
         'bands': bands
     })

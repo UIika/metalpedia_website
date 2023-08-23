@@ -28,19 +28,15 @@ urlpatterns = [
     path('logout/', logoutUser, name='logout'),
     path('register/', registerPage, name='register'),
     
-    path('profile/<int:id>/', userProfile, name='profile'),
+    path('profiles/', profiles, name='profiles'),
+    path('profiles/<int:id>/', oneprofile, name='oneprofile'),
     
     path('delete_comment/<int:id>/', delete_comment, name='delete_comment'),
     
-    path('like_band/<int:id>/', like_band,  name='like_band'),
-    path('like_album/<int:id>/', like_album,  name='like_album'),
-    path('like_musician/<int:id>/', like_musician,  name='like_musician'),
-    path('like_song/<int:id>/', like_song,  name='like_song'),
+    path('like/<str:instance>/<int:id>/', like,  name='like'), 
+    path('delete_like/<str:instance>/<int:id>/', delete_like, name='delete_like'),
     
-    path('delete_like_band/<int:id>/', delete_like_band, name='delete_like_band'),
-    path('delete_like_album/<int:id>/', delete_like_album, name='delete_like_album'),
-    path('delete_like_musician/<int:id>/', delete_like_musician, name='delete_like_musician'),
-    path('delete_like_song/<int:id>/', delete_like_song, name='delete_like_song'),
+    path('change_avatar/<int:id>/', change_avatar, name='change_avatar'),
     
     path('addbands', addbands, name='addbands')
     

@@ -80,6 +80,10 @@ def getbandsdata(url, browser):
         member_name = browser.find_element(By.CSS_SELECTOR, 'h1.band_member_name').get_attribute('innerHTML').replace('/', '\\')
         member_prof = browser.find_element(By.CSS_SELECTOR, '.member_in_band_role strong').\
             get_attribute('innerHTML').replace('/', '\\')
+        try:
+            member_country = browser.find_element(By.CSS_SELECTOR, 'dl.float_right>dd>a').text
+        except:
+            member_country = None
         member_age = browser.find_elements(By.CSS_SELECTOR, 'dl.float_left dd')[1].\
             get_attribute('innerHTML').strip()
         try:
@@ -93,6 +97,7 @@ def getbandsdata(url, browser):
             member_photo = None
         memberslist.append({'member_name':member_name,
                             'member_prof':member_prof,
+                            'member_country':member_country,
                             'member_age':member_age,
                             'member_rip':member_rip,
                             'member_photo':member_photo,
@@ -107,8 +112,12 @@ def getbandsdata(url, browser):
     for exmember in exmembers_hrefs:
         browser.get(exmember)
         exmember_name = browser.find_element(By.CSS_SELECTOR, 'h1.band_member_name').get_attribute('innerHTML').replace('/', '\\')
-        exmember_prof = browser.find_element(By.CSS_SELECTOR, '#artist_tab_past .member_in_band_role strong').\
+        exmember_prof = browser.find_element(By.CSS_SELECTOR, '.member_in_band_role strong').\
             get_attribute('innerHTML').replace('/', '\\')
+        try:
+            exmember_country = browser.find_element(By.CSS_SELECTOR, 'dl.float_right>dd>a').text
+        except:
+            exmember_country = None
         exmember_age = browser.find_elements(By.CSS_SELECTOR, 'dl.float_left dd')[1].\
             get_attribute('innerHTML').strip()
         try:
@@ -122,6 +131,7 @@ def getbandsdata(url, browser):
             exmember_photo = None
         exmemberslist.append({'exmember_name':exmember_name,
                             'exmember_prof':exmember_prof,
+                            'exmember_country':exmember_country,
                             'exmember_age':exmember_age,
                             'exmember_rip':exmember_rip,
                             'exmember_photo':exmember_photo,

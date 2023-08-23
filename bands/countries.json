@@ -709,7 +709,7 @@
   {
     "url": "/wiki/Iran",
     "alpha3": "IRN",
-    "name": "Iran (Islamic Republic of)",
+    "name": "Iran",
     "file_url": "//upload.wikimedia.org/wikipedia/commons/c/ca/Flag_of_Iran.svg",
     "license": "Public domain"
   },
@@ -1234,8 +1234,8 @@
   {
     "url": "/wiki/Russia",
     "alpha3": "RUS",
-    "name": "Russian Federation",
-    "file_url": "//upload.wikimedia.org/wikipedia/en/f/f3/Flag_of_Russia.svg",
+    "name": "Russia",
+    "file_url": "//upload.wikimedia.org/wikipedia/commons/0/03/Flag_white.svg",
     "license": "Public domain"
   },
   {
@@ -1612,21 +1612,21 @@
   {
     "url": "/wiki/Venezuela",
     "alpha3": "VEN",
-    "name": "Venezuela (Bolivarian Republic of)",
+    "name": "Venezuela",
     "file_url": "//upload.wikimedia.org/wikipedia/commons/0/06/Flag_of_Venezuela.svg",
     "license": "Public domain"
   },
   {
     "url": "/wiki/Vietnam",
     "alpha3": "VNM",
-    "name": "Viet Nam",
+    "name": "Vietnam",
     "file_url": "//upload.wikimedia.org/wikipedia/commons/2/21/Flag_of_Vietnam.svg",
     "license": "Public domain"
   },
   {
     "url": "/wiki/British_Virgin_Islands",
     "alpha3": "VGB",
-    "name": "Virgin Islands (British)",
+    "name": "Virgin Islands",
     "file_url": "//upload.wikimedia.org/wikipedia/commons/4/42/Flag_of_the_British_Virgin_Islands.svg",
     "license": "Public domain"
   },

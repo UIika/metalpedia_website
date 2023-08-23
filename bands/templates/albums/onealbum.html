@@ -1,5 +1,6 @@
 {% extends 'base.html' %}
 {% load static %}
+{% load class_tag %}
 {% block content %}
 <div class='container'>
     <h1><a href="{% url 'onealbum' id=album.id %}">{{album}}</a></h1>
@@ -20,32 +21,7 @@
                 <h3 class="red">Release year:&nbsp&nbsp&nbsp</h3>
                 <h3><a href="{% url 'years' n=album.release_year.number%}">{{album.release_year.number}}</a></h3>
             </div>
-            
-            {% if request.user.is_authenticated %}
-            {% if like %}
-            <form action="{% url 'delete_like_album' id=album.id %}" method="POST">
-                {% csrf_token %}
-                <button type="submit" class="btn btn-secondary btn-block m-3" name="like">
-                    <div class="span">
-                        <h2 class="mt-2">Unlike</h2>
-                        
-                    </div>
-                </button>
-            </form>
-            {% else %}
-            <form action="{% url 'like_album' id=album.id %}" method="POST">
-                {% csrf_token %}
-                <button type="submit" class="btn btn-danger btn-block m-3" name="like">
-                    <div class="span">
-                        <h2 class="mt-2">Like!</h2>
-                        <input class="m-1" type="image" src="{% static 'images/favicon.ico' %}" alt="like"
-                            width="50">
-                    </div>
-                </button>
-            </form>
-            {% endif %}
-            {% endif %}
-
+            {% include 'like.html' with inst=album|get_class id=album.id %}
         </div>
         <div class="col">
             <br>

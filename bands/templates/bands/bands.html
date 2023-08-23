@@ -2,14 +2,13 @@
 {% load static %}
 {% block content %}
 <div>
-    <br>
     <h1><a href="{% url 'bands' %}">All Metal Bands</a></h1>
     <br>
 </div>
 {% comment %} <input type="text" placeholder="What are you looking for?"> {% endcomment %}
 <div class="row">
     {% for band in page %}
-    <div class="col">
+    <div class="col mb-3">
         <div class="band-item">
             <center>
                 <div>
@@ -23,11 +22,9 @@
                     </a>
                     {% endif %}
                 </div>
-                <h2><a href="{% url 'oneband' id=band.id %}">{{band}}</a></h2>
+                <h4><a href="{% url 'oneband' id=band.id %}">{{band}}</a></h4>
             </center>
         </div>
-        <br>
-        <br>
     </div>
     {% endfor %}
 </div>

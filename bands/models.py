@@ -6,7 +6,6 @@ from django.contrib.contenttypes.models import ContentType
 from embed_video.fields import EmbedVideoField
 from PIL import Image
 
-
 class Year(models.Model):
     number = models.IntegerField(unique=True)
     
@@ -15,7 +14,7 @@ class Year(models.Model):
         
     def __str__(self) -> str:
         return str(self.number)
-    
+ 
 class Country(models.Model):
     name = models.CharField(max_length=100)
     flag = models.URLField(blank=True, null=True)
@@ -51,7 +50,7 @@ class Band(models.Model):
     link = models.URLField()
     
     comments = GenericRelation(Comment, related_query_name='band')
-    likes = models.ManyToManyField(User, related_name='bands', blank=True, null=True)
+    likes = models.ManyToManyField(User, related_name='bands', blank=True)
     
     def __str__(self) -> str:
         return self.name
@@ -64,15 +63,19 @@ class Musician(models.Model):
     bands = models.ManyToManyField(Band, blank=True, related_name='members')
     exbands = models.ManyToManyField(Band, blank=True, related_name='exmembers')
     profession = models.CharField(max_length=150, blank=True)
+    country = models.ForeignKey(Country, related_name='musicians', on_delete=models.SET_NULL, blank=True, null=True)
     birth_date = models.CharField(max_length=100)
     death_date = models.CharField(max_length=100, blank=True, null=True)
     photo = models.URLField(blank=True, null=True)
     
     comments = GenericRelation(Comment, related_query_name='musician')
-    likes = models.ManyToManyField(User, related_name='musicians', blank=True, null=True)
+    likes = models.ManyToManyField(User, related_name='musicians', blank=True)
     
     def __str__(self) -> str:
         return self.name
+    
+    class Meta:
+        ordering = ['name']
     
     
     
@@ -84,7 +87,7 @@ class Album(models.Model):
     cover = models.URLField(blank=True, null=True)
     
     comments = GenericRelation(Comment, related_query_name='album')
-    likes = models.ManyToManyField(User, related_name='albums', blank=True, null=True)
+    likes = models.ManyToManyField(User, related_name='albums', blank=True)
     
     class Meta:
         ordering = ['release_year__number', 'name']
@@ -101,38 +104,28 @@ class Song(models.Model):
     video = EmbedVideoField()
     
     comments = GenericRelation(Comment, related_query_name='song')
-    likes = models.ManyToManyField(User, related_name='songs', blank=True, null=True)
+    likes = models.ManyToManyField(User, related_name='songs', blank=True)
+    
+    class Meta:
+        ordering = ['num']
     
     def __str__(self) -> str:
         return f'{self.name}  -  {self.album.band}  -  {self.album}'
     
 class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='profile')
-    
+    name = models.CharField(max_length=50, default='', blank=True, null=True)
     avatar = models.ImageField(
         default='avatar.jpg', # default avatar
-        upload_to='profile_avatars' # dir to store the image
     )
+    likes = models.ManyToManyField(User, related_name='profiles', blank=True)
 
     def __str__(self):
         return f'{self.user.username} Profile'
 
-    def save(self, *args, **kwargs):
-        # save the profile first
-        super().save(*args, **kwargs)
-
-        # resize the image
-        img = Image.open(self.avatar.path)
-        if img.height > 300 or img.width > 300:
-            output_size = (300, 300)
-            # create a thumbnail
-            img.thumbnail(output_size)
-            # overwrite the larger image
-            img.save(self.avatar.path)
-            
 def create_profile(sender, instance, created, **kwargs):
     if created:
         user_profile = Profile(user=instance)
         user_profile.save()
-        
+
 post_save.connect(create_profile, sender=User)

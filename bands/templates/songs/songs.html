@@ -1,8 +1,7 @@
 {% extends 'base.html' %}
-
+{% load static %}
 {% block content %}
 <div>
-    <br>
     <h1><a href="{% url 'songs' %}">All Metal Songs</a></h1>
     <br>
 </div>
@@ -10,13 +9,17 @@
     {% for song in page %}
     <div class="col">
         <center>
+            <div>
+                {{song.num_likes}}
+                <img class="mb-1" src="{% static 'images/favicon.ico' %}" width="20">
+            </div>
             {% if song.album.cover %}
             <a href="{% url 'onesong' id=song.id %}">
                 <img class="rounded" src="{{song.album.cover}}"
-                    alt={{song.album.name}} width=200>
+                    alt={{song.album.name}} width=130>
             </a>
             {% endif %}
-            <h3><a href="{% url 'onesong' id=song.id %}">{{song.name}}</a></h3>
+            <h4><a href="{% url 'onesong' id=song.id %}">{{song.name}}</a></h4>
             <br>
         </center>
     </div>

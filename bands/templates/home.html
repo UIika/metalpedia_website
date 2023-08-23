@@ -4,13 +4,11 @@
 {% block content %}
 <center>
   <br>
-  <br>
-  <br>
   <div class="mplogo">
-    <img src="{% static 'images/mp logo.png' %}" alt="bands" width=1000>
+    <img src="{% static 'images/mp logo.png' %}" alt="bands" style="width=100%">
   </div>
   <br>
-  <p class="h3">Made by metalheads for metalheads</p>
+  <p class="h5">Made by metalheads for metalheads</p>
   <br>
 
 </center>
@@ -24,7 +22,7 @@
             <div id="homephoto">
               <a href="{% url 'bands'%}"><img class="rounded" src="{% static 'images/big4.png' %}" alt={{bands}}></a>
             </div>
-            <h2><a href="{% url 'bands'%}">Bands</a></h2>
+            <h3><a href="{% url 'bands'%}">Bands</a></h3>
             <br>
           </center>
         </div>
@@ -35,7 +33,7 @@
             <div id="homephoto">
               <a href="{% url 'albums'%}"><img class="rounded" src="{% static 'images/sabbath.jpg' %}" alt={{albums}}></a>
             </div>
-            <h2><a href="{% url 'albums'%}">Albums</a></h2>
+            <h3><a href="{% url 'albums'%}">Albums</a></h3>
             <br>
           </center>
         </div>
@@ -46,7 +44,7 @@
             <div id="homephoto">
               <a href="{% url 'musicians'%}"><img class="rounded" src="{% static 'images/jeff.jpg' %}" alt={{musicians}}></a>
             </div>
-            <h2><a href="{% url 'musicians'%}">Musicians</a></h2>
+            <h3><a href="{% url 'musicians'%}">Musicians</a></h3>
             <br>
           </center>
         </div>
@@ -57,7 +55,7 @@
             <div id="homephoto">
               <a href="{% url 'songs'%}"><img class="rounded" src="{% static 'images/dio.png' %}" alt={{songs}}></a>
             </div>
-            <h2><a href="{% url 'songs'%}">Songs</a></h2>
+            <h3><a href="{% url 'songs'%}">Songs</a></h3>
             <br>
           </center>
         </div>
@@ -68,7 +66,7 @@
             <div id="homephoto">
               <a href="{% url 'years' n=default_year %}"><img class="rounded" src="{% static 'images/albums.jpg' %}" alt={{years}}></a>
             </div>
-            <h2><a href="{% url 'years' n=default_year %}">Years</a></h2>
+            <h3><a href="{% url 'years' n=default_year %}">Years</a></h3>
             <br>
           </center>
         </div>
@@ -79,7 +77,18 @@
             <div id="homephoto">
               <a href="{% url 'countries'%}"><img class="rounded" src="{% static 'images/map.png' %}" alt={{countries}}></a>
             </div>
-            <h2><a href="{% url 'countries'%}">Countries</a></h2>
+            <h3><a href="{% url 'countries'%}">Countries</a></h3>
+            <br>
+          </center>
+        </div>
+      </div>
+      <div class="col">
+        <div class="band-item">
+          <center>
+            <div id="homephoto">
+              <a href="{% url 'profiles'%}"><img class="rounded" src="{% static 'images/concert.jpg' %}" alt={{profiles}}></a>
+            </div>
+            <h3><a href="{% url 'profiles'%}">People</a></h3>
             <br>
           </center>
         </div>

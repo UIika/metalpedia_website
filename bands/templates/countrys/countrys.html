@@ -2,7 +2,6 @@
 
 {% block content %}
     <div>
-        <br>
         <h1><a href="{% url 'countries' %}">All Countries</a></h1>
         <br>
     </div>
@@ -16,7 +15,7 @@
                     </a>
                 {% endif %}
                 <div class="alname">
-                    <h3><a href="{% url 'onecountry' id=country.id %}">{{country.name}}</a></h3>
+                    <h4><a href="{% url 'onecountry' id=country.id %}">{{country.name}}</a></h4>
                 </div>  
                 <br>
                 </center>

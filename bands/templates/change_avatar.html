@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+
+{% block content %}
+{% if request.user == profile.user %}
+<div>
+    <img src="{{profile.avatar.url}}" alt="..." class="rounded-3"
+    style="width: 300px; height: 300px; object-fit: cover">
+    <form action="" method="POST" enctype="multipart/form-data">
+        {% csrf_token %}
+        {{avatar_form.as_p}}
+        <button type="submit" class="btn btn-outline-danger btn-sm">Change Avatar</button>
+    </form>
+</div>
+{% else %}
+<h3>You are not allowed here</h3>
+{% endif %}
+
+{% endblock content %}

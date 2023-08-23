@@ -1,6 +1,6 @@
 {% extends 'base.html' %}
 {% load embed_video_tags %}
-{% load static %}
+{% load class_tag %}
 {% block content %}
 <div class="container">
     <h1><a href="{% url 'onesong' id=song.id %}">{{song.name}}</a></h1>
@@ -15,7 +15,7 @@
             <br>
             <div class="span">
                 <h3 class="red">Band:&nbsp&nbsp&nbsp</h3>
-                <h3><a href="{% url 'oneband' id=song.album.id %}">{{song.album.band}}</a></h3>
+                <h3><a href="{% url 'oneband' id=song.album.band.id %}">{{song.album.band}}</a></h3>
             </div>
             <br>
             <div class="span">
@@ -33,31 +33,7 @@
             <div class="span" id="video">
                 {% video song.video '440x320' %}
             </div>
-            
-            {% if request.user.is_authenticated %}
-            {% if like %}
-            <form action="{% url 'delete_like_song' id=song.id %}" method="POST">
-                {% csrf_token %}
-                <button type="submit" class="btn btn-secondary btn-block m-5" name="like">
-                    <div class="span">
-                        <h2 class="mt-2">Unlike</h2>
-                        
-                    </div>
-                </button>
-            </form>
-            {% else %}
-            <form action="{% url 'like_song' id=song.id %}" method="POST">
-                {% csrf_token %}
-                <button type="submit" class="btn btn-danger btn-block m-5" name="like">
-                    <div class="span">
-                        <h2 class="mt-2">Like!</h2>
-                        <input class="m-1" type="image" src="{% static 'images/favicon.ico' %}" alt="like"
-                            width="50">
-                    </div>
-                </button>
-            </form>
-            {% endif %}
-            {% endif %}
+            {% include 'like.html' with inst=song|get_class id=song.id %}
         </div>
     </div>
 </div>

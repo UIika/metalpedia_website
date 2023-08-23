@@ -2,7 +2,6 @@
 {% load static %}
 {% block content %}
     <div>
-        <br>
         <h1><a href="{% url 'albums' %}">All Metal Albums</a></h1>
         <br>
     </div>
@@ -16,11 +15,11 @@
                 </div>
                 {% if album.cover %}
                     <a href="{% url 'onealbum' id=album.id %}"><img class="rounded" src="{{album.cover}}"
-                            alt={{album.name}} width=200>
+                            alt={{album.name}} width=130>
                     </a>
                 {% endif %}
                 <div class="alname">
-                    <h3><a href="{% url 'onealbum' id=album.id %}">{{album}}</a></h3>
+                    <h4><a href="{% url 'onealbum' id=album.id %}">{{album}}</a></h4>
                 </div>  
                 <br>
                 </center>

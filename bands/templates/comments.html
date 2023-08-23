@@ -19,11 +19,16 @@
     {% for comment in comments.all %}
     <div class="card-body p-4">
         <div class="d-flex flex-start">
-            <img class="rounded-circle shadow-1-strong me-3"
-            src="{{comment.user.profile.avatar.url}}" alt="{{comment.user.username}}" width="60" height="60" />
+            <a href="{% url 'oneprofile' id=comment.user.profile.id %}">
+                <img class="rounded-circle shadow-1-strong me-3"
+                src="{{MEDIA_URL}}{{comment.user.profile.avatar.url}}"
+                alt="{{comment.user.username}}" width="60" height="60">
+            </a>
             <div>
                 <div class="span">
-                    <h6 class="fw-bold mb-1">{{comment.user.username}}</h6>
+                    <a href="{% url 'oneprofile' id=comment.user.profile.id %}">
+                        <h6 class="fw-bold mb-1">{{comment.user.username}}</h6>
+                    </a>
                     {% if comment.user.is_superuser %}&nbsp
                     <span class="badge bg-danger">Admin</span>
                     {% endif %}

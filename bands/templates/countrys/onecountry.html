@@ -1,25 +1,57 @@
 {% extends 'base.html' %}
-
+{% load static %}
 {% block content %}
-    <div>
-        <h1><a href="{% url 'onecountry' id=country.id %}">All Metal Bands From&nbsp{{country.name}}</a></h1>
-        <br>
-    </div>
-    <div class="row">
-        {% for band in country.bands.all %}
-        <div class="col">
-            <div class="band-item">
-                <center>
-                    <div class="logo">
-                        {% if band.logo %}
-                        <a href="{% url 'oneband' id=band.id %}"><img src="{{band.logo}}" alt={{band.name}}></a>
-                        {% endif %}
-                    </div>
-                    <h2><a href="{% url 'oneband' id=band.id %}">{{band}}</a></h2>
-                    <br>
-                </center>
-            </div>
+<div class="row">
+    <div class="col">
+        <div>
+            <h1><a href="{% url 'onecountry' id=country.id %}">All Metal Bands From&nbsp{{country.name}}</a></h1>
+            <br>
         </div>
-        {% endfor %}
+        <div class="row">
+            {% for band in country.bands.all %}
+            <div class="col">
+                <div class="band-item">
+                    <center>
+                        <div class="logo">
+                            {% if band.logo %}
+                            <a href="{% url 'oneband' id=band.id %}"><img src="{{band.logo}}" alt={{band.name}}></a>
+                            {% endif %}
+                        </div>
+                        <h4><a href="{% url 'oneband' id=band.id %}">{{band}}</a></h4>
+                        <br>
+                    </center>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
     </div>
+    <div class="col">
+        <div>
+            <h1><a href="{% url 'onecountry' id=country.id %}">All Musicians From&nbsp{{country.name}}</a></h1>
+            <br>
+        </div>
+        <div class="row">
+            {% for musician in country.musicians.all %}
+            <div class="col">
+                <div class="band-item">
+                    <center>
+                        <div class="logo">
+                            {% if musician.photo %}
+                            <a href="{% url 'onemusician' id=musician.id %}"><img src="{{musician.photo}}" alt={{musician.name}}></a>
+                            {% else %}
+                            <a href="{% url 'onemusician' id=musician.id %}">
+                                <img class="rounded" src="{% static 'images/avatar.jpg' %}" alt={{musician.name}} width=200>
+                            </a>
+                            {% endif %}
+                        </div>
+                        <h4><a href="{% url 'onemusician' id=musician.id %}">{{musician}}</a></h4>
+                        <br>
+                    </center>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+
 {% endblock content %}

@@ -1,0 +1,30 @@
+{% load static %}
+{% if request.user.is_authenticated %}
+{% if like %}
+<form action="{% url 'delete_like' instance=inst id=id %}" method="POST">
+    {% csrf_token %}
+    <div class="m-3">
+        <h3>{{num_likes}} like(s)</h3>
+        <button type="submit" class="btn btn-secondary btn-block" name="like">
+            <div class="span">
+                <h2 class="mt-2">Unlike</h2>
+            </div>
+        </button>
+    </div>
+</form>
+
+{% else %}
+<form action="{% url 'like' instance=inst id=id %}" method="POST">
+    {% csrf_token %}
+    <div class="m-3">
+        <h3>{{num_likes}} like(s)</h3>
+        <button type="submit" class="btn btn-danger btn-block" name="like">
+            <div class="span">
+                <h2 class="mt-2">Like!</h2>
+                <input class="m-1" type="image" src="{% static 'images/favicon.ico' %}" alt="like" width="50">
+            </div>
+        </button>
+    </div>
+</form>
+{% endif %}
+{% endif %}

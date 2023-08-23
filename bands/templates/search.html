@@ -1,5 +1,5 @@
 {% extends 'base.html' %}
-
+{% load static %}
 {% block content %}
     {% if q %}
         <div>
@@ -16,7 +16,8 @@
                         <center>
                             <div class="logo">
                                 {% if band.logo %}
-                                <a href="{% url 'oneband' id=band.id %}"><img src="{{band.logo}}" alt={{band.name}}></a>
+                                <a href="{% url 'oneband' id=band.id %}"><img src="{{band.logo}}"
+                                    alt={{band.name}}></a>
                                 {% endif %}
                             </div>
                             <h2><a href="{% url 'oneband' id=band.id %}">{{band}}</a></h2>
@@ -30,16 +31,25 @@
         <h3 class="red">Musicians:</h3>
         <div class="row">
             {% for musician in qdata.musicians %}
-                <div class="col">
+            <div class="col">
+                <div class="band-item">
                     <center>
-                        {% if musician.photo %}
-                            <a href="{% url 'onemusician' id=musician.id %}"><img class="rounded" src="{{musician.photo}}" alt={{musician.name}} width=200></a>
-                        {% endif %}
-                        <div class="alname" >
-                            <h3><a href="{% url 'onemusician' id=musician.id %}">{{musician}}</a></h3>
+                        <div class="logo">
+                            {% if musician.photo %}
+                            <a href="{% url 'onemusician' id=musician.id %}"><img src="{{musician.photo}}"
+                                alt={{musician.name}}></a>
+                            {% else %}
+                            <a href="{% url 'onemusician' id=musician.id %}">
+                                <img class="rounded" src="{% static 'images/avatar.jpg' %}"
+                                alt={{musician.name}} width=200>
+                            </a>
+                            {% endif %}
                         </div>
+                        <h2><a href="{% url 'onemusician' id=musician.id %}">{{musician}}</a></h2>
+                        <br>
                     </center>
                 </div>
+            </div>
             {% endfor %}
         </div>
         {% endif %}
@@ -52,7 +62,7 @@
                 
                 {% if album.cover %}
                     <a href="{% url 'onealbum' id=album.id %}"><img class="rounded" src="{{album.cover}}"
-                            alt={{album.name}} width=200></a>
+                            alt={{album.name}} width=130></a>
                 {% endif %}
                 <div class="alname" >
                     <h3><a href="{% url 'onealbum' id=album.id %}">{{album}}</a></h3>
@@ -70,7 +80,8 @@
                 <div class="col">
                     <center>
                         {% if song.album.cover %}
-                        <a href="{% url 'onesong' id=song.id %}"><img class="rounded" src="{{song.album.cover}}" alt={{song.album.name}} width=200></a>
+                        <a href="{% url 'onesong' id=song.id %}"><img class="rounded"
+                            src="{{song.album.cover}}" alt={{song.album.name}} width=130></a>
                         {% endif %}
                         <h3><a href="{% url 'onesong' id=song.id %}">{{song.name}}</a></h3>
                         <br>

@@ -1,26 +1,39 @@
 {% extends 'base.html' %}
 {% load static %}
+{% load class_tag %}
 <br>
 {% block content %}
-<div class="row justify-content-center">
+<div class="row row-cols-auto">
     <div class="col-md-7 col-lg-4 mb-5 mb-lg-0 wow fadeIn">
         <div class="bg-dark">
-            <img src="{{profile.avatar.url}}" alt="...">
+            <div class="avatar">
+                <img src="{{profile.avatar.url}}" alt="..." class="avatar">
+            </div>
+            {% if profile == request.user.profile %}
+            <div>
+                <a href="{% url 'change_avatar' id=profile.id %}"class="btn btn-outline-danger btn-sm m-2">Change Avatar</a>
+            </div>
+            {% endif %}
             <div class="m-4">
                 <div class="span">
                     <h1>{{profile.user.username}}</h1>
                     {% if profile.user.is_superuser %}&nbsp
-                        <span class="badge bg-danger"><h4 class="mt-2">Admin</h4></span>
+                        <span class="badge rounded-pill bg-danger"><h5 class="mt-2">Admin</h5></span>
                     {% endif %}
                 </div>
-                {% if profile.user.is_superuser %}
+                {% if request.user.is_superuser and profile.user.is_superuser %}
                 <br>
                 <a href="{% url 'addbands' %}"><h3>Add new bands</h3></a>
                 {% endif %}
+                {% if profile.user == request.user %}
                 <br>
-                <div>
-                    <a style="font-size: 20px; font-weight: bold;" href="{% url 'logout' %}"><h3>Log out</h3></a>
-                </div>
+                <br>
+                <br>
+                <br>
+                <a style="font-size: 20px; font-weight: bold;" href="{% url 'logout' %}"><h3>Log out</h3></a>
+                {% else %}
+                    {% include 'like.html' with inst=profile|get_class id=profile.id %}
+                {% endif %}
             </div>
         </div>
     </div>
@@ -28,9 +41,10 @@
         <div class="ps-lg-1-6 ps-xl-5">
             <div class="mb-3 wow fadeIn">
                 <div class="text-start mb-1-6 wow fadeIn">
-                    <h2 class="mb-0 text-danger">Favourite bands</h2>
+                    <h2 class="mb-0 text-danger">Favourite bands:</h2>
                     <br>
-                    <div class="row">
+                    <div class="row row-cols-auto">
+                        {% if profile.user.bands.all %}
                         {% for band in profile.user.bands.all %}
                         <div class="col">
                             <div class="band-item">
@@ -42,24 +56,28 @@
                                         </a>
                                         {% endif %}
                                     </div>
-                                    <h2><a href="{% url 'oneband' id=band.id %}">{{band}}</a></h2>
+                                    <h5><a href="{% url 'oneband' id=band.id %}">{{band}}</a></h5>
                                 </center>
                             </div>
                         </div>
                         {% endfor %}
+                        {% else %}
+                        <p class="m-3">Nothing here for now</p>
+                        {% endif %}
                     </div>
                 </div>
                 <div class="mb-3 wow fadeIn">
                     <div class="text-start mb-1-6 wow fadeIn">
-                        <h2 class="mb-0 text-danger">Favourite albums</h2>
+                        <h2 class="mb-0 text-danger">Favourite albums:</h2>
                         <br>
-                        <div class="row">
+                        <div class="row row-cols-auto">
+                            {% if profile.user.bands.all %}
                             {% for album in profile.user.albums.all %}
                             <div class="col">
                                 <center>
                                     {% if album.cover %}
                                     <a href="{% url 'onealbum' id=album.id %}"><img class="rounded"
-                                            src="{{album.cover}}" alt={{album.name}} width=100>
+                                            src="{{album.cover}}" alt={{album.name}} width=130>
                                     </a>
                                     {% endif %}
                                     <div class="alname">
@@ -68,46 +86,50 @@
                                 </center>
                             </div>
                             {% endfor %}
+                            {% else %}
+                            <p class="m-3">Nothing here for now</p>
+                            {% endif %}
                         </div>
                     </div>
                 </div>
                 <div class="mb-3 wow fadeIn">
                     <div class="text-start mb-1-6 wow fadeIn">
-                        <h2 class="mb-0 text-danger">Favourite musicians</h2>
+                        <h2 class="mb-0 text-danger">Favourite musicians:</h2>
                         <br>
-                        <div class="row">
+                        <div class="row row-cols-auto">
+                            {% if profile.user.bands.all %}
                             {% for musician in profile.user.musicians.all %}
                             <div class="col">
-                                <center>
-                                    <div class="musphoto">
-                                        {% if musician.photo %}
-                                        <a href="{% url 'onemusician' id=musician.id %}">
-                                            <span>
-                                                <img class="rounded" src="{{musician.photo}}" alt={{musician.name}}>
-                                            </span>
-                                        </a>
-                                        {% else %}
-                                        <a href="{% url 'onemusician' id=musician.id %}">
-                                            <img class="rounded" src="{% static 'images/avatar.jpg' %}"
-                                                alt={{musician.name}} width=100>
-                                        </a>
-                                        {% endif %}
-                                        <div class="alname">
-                                            <h5><a href="{% url 'onemusician' id=musician.id %}">{{musician}}</a></h5>
+                                <div class="band-item">
+                                    <center>
+                                        <div class="logo">
+                                            {% if musician.photo %}
+                                            <a href="{% url 'onemusician' id=musician.id %}"><img src="{{musician.photo}}" alt={{musician.name}}></a>
+                                            {% else %}
+                                            <a href="{% url 'onemusician' id=musician.id %}">
+                                                <img class="rounded" src="{% static 'images/avatar.jpg' %}" alt={{musician.name}} width=200>
+                                            </a>
+                                            {% endif %}
                                         </div>
-                                    </div>
-                                </center>
+                                        <h5><a href="{% url 'onemusician' id=musician.id %}">{{musician}}</a></h5>
+                                        <br>
+                                    </center>
+                                </div>
                             </div>
                             {% endfor %}
+                            {% else %}
+                            <p class="m-3">Nothing here for now</p>
+                            {% endif %}
                         </div>
                     </div>
                 </div>
                 <div class="mb-3 wow fadeIn">
                     <div class="text-start mb-1-6 wow fadeIn">
-                        <h2 class="mb-0 text-danger">Favourite songs</h2>
+                        <h2 class="mb-0 text-danger">Favourite songs:</h2>
                         <br>
+                        {% if profile.user.songs.all %}
                         <ul>
-                            {% for song in profile.user.songs.all %}
+                            {% for song in profile.user.songs.all|dictsort:'name' %}
                             <li>
                                 <h5>
                                     <a href="{% url 'onesong' id=song.id %}">
@@ -115,8 +137,11 @@
                                     </a>
                                 </h5>
                             </li>
-                            {% endfor %}  
+                            {% endfor %}
                         </ul>
+                        {% else %}
+                        <p class="m-3">Nothing here for now</p>
+                        {% endif %}
                     </div>
                 </div>
             </div>

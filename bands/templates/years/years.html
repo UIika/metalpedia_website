@@ -2,7 +2,6 @@
 
 {% block content %}
     <div>
-        <br>
         <h1><a href="{% url 'years' n=default_year %}">All Metal Albums Through Years</a></h1>
         <br>
     </div>
@@ -25,11 +24,11 @@
                 <center>
                 {% if album.cover %}
                     <a href="{% url 'onealbum' id=album.id%}"><img class="rounded" src="{{album.cover}}"
-                            alt={{album.name}} width=200>
+                            alt={{album.name}} width=130>
                     </a>
                 {% endif %}
                 <div class="alname">
-                    <h3><a href="{% url 'onealbum' id=album.id %}">{{album}}</a></h3>
+                    <h4><a href="{% url 'onealbum' id=album.id %}">{{album}}</a></h4>
                 </div>  
                 <br>
                 </center>

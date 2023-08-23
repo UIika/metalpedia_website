@@ -1,21 +1,21 @@
 a img{
-    transition: transform 0.25s;
+    transition: transform 0.3s;
 }
 body{
     color: white
 }
 #search{
-    width: 185px;
+    width: 100px;
 }
 a{
     text-decoration: none;
     color: white;
 }
 a:hover{
-    color: rgb(192, 0, 0)
+    color: rgb(192, 0, 0);
 }
 a:hover img{
-    transform: scale(1.05);
+    transform: scale(1.5);
 }
 button{
     border-radius: 10px;
@@ -50,13 +50,15 @@ button{
 }
 .logo{
     height: 100px;
-    width: auto;
+    width: 130px;
     flex: 0 0 auto;
-    object-position: top
+    object-position: top;
+    background-color: black;
+    border-radius: 10px;
     
 }
 .logo img{
-    width: 200px;
+    width: 100%;
     height: 100%;
     border-radius: 10px;
     object-fit: contain;
@@ -82,8 +84,8 @@ button{
     object-fit: cover;
 }
 #homephoto{
-    width: 250px;
-    height: 175px;
+    width: 130px;
+    height: 90px;
 }
 #homephoto img{
     width: 100%;
@@ -108,8 +110,8 @@ button{
     width: 300px;
 } 
 .flag{
-    width: 250px;
-    height: 150px;
+    width: 140px;
+    height: 90px;
 }
 input[type=range]::-webkit-slider-thumb {
     background: rgb(192, 0, 0);
@@ -127,4 +129,16 @@ textarea{
 .musphoto img{
     height: 150px;
     width: auto;
+}
+.avatar img{
+    width: 300px;
+    height: 300px;
+    object-fit: cover;
+    border-radius: 10px;
+}
+.miniavatar img{
+    width: 130px;
+    height: 130px;
+    object-fit: cover;
+    border-radius: 5px;
 }
